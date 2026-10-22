@@ -3,203 +3,285 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&family=Inter:wght@400;600;800&display=swap">
 <style>
-/* Scena unica su bordeaux profondo: guilloché da banconota che ruota, la m si riempie d'oro liquido, anello di avanzamento attorno */
+/* Caveau di notte: la m d'oro estrusa si riempie dal basso, monete in orbita, facciata a colonne sullo sfondo; HUD di vetro sopra */
 :root{
-  --notte:#2A0B12; --bordeaux:#6E1E2C; --avorio:#F5EFE4; --oro:#C6A15B; --oro-chiaro:#EBD39B;
-  --tenue:rgba(245,239,228,.58); --velo:rgba(245,239,228,.07); --linea:rgba(245,239,228,.12);
+  --notte:#1E070D; --bordeaux:#6E1E2C; --avorio:#F5EFE4; --oro:#C6A15B; --oro-chiaro:#EBD39B;
+  --tenue:rgba(245,239,228,.6); --vetro:rgba(30,7,13,.42); --linea:rgba(245,239,228,.13);
   --display:'Bodoni Moda',Didot,'Times New Roman',serif; --testo:'Inter','Helvetica Neue',Arial,sans-serif;
   color-scheme:dark;
 }
 html,body{height:100%}
-body{margin:0;background:var(--notte);color:var(--avorio);font-family:var(--testo);overflow-x:hidden;
+body{margin:0;background:radial-gradient(100% 70% at 50% 30%,#4A1320 0%,var(--notte) 70%) fixed,var(--notte);color:var(--avorio);font-family:var(--testo);overflow-x:hidden;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-sizing:border-box}
-.luci{position:fixed;inset:0;pointer-events:none;overflow:hidden}
-.luci i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;mix-blend-mode:screen}
-.luci i:nth-child(1){width:70vmax;height:70vmax;left:-20vmax;top:-25vmax;background:radial-gradient(circle,var(--bordeaux),transparent 65%);animation:vaga1 18s ease-in-out infinite alternate}
-.luci i:nth-child(2){width:55vmax;height:55vmax;right:-20vmax;bottom:-20vmax;background:radial-gradient(circle,#8B2A3B,transparent 65%);animation:vaga2 22s ease-in-out infinite alternate}
-.luci i:nth-child(3){width:30vmax;height:30vmax;left:40%;top:20%;background:radial-gradient(circle,rgba(198,161,91,.35),transparent 70%);animation:vaga1 26s ease-in-out infinite alternate-reverse}
-@keyframes vaga1{to{transform:translate(12vmax,10vmax) scale(1.15)}}
-@keyframes vaga2{to{transform:translate(-10vmax,-8vmax) scale(.9)}}
-.grana{position:fixed;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:overlay;
+canvas#scena3d{position:fixed;inset:0;width:100%;height:100%;display:block}
+.grana{position:fixed;inset:0;pointer-events:none;opacity:.1;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-canvas#fondo{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.vignetta{position:fixed;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(10,2,5,.75) 100%)}
 
-.scena{position:relative;min-height:100%;max-width:460px;margin:0 auto;padding-block:28px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center}
-.occhiello{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--tenue);
-  padding:8px 14px;border:1px solid var(--linea);border-radius:999px;background:var(--velo);backdrop-filter:blur(8px)}
-.occhiello::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--oro);box-shadow:0 0 0 0 rgba(198,161,91,.7);animation:pulsa 1.6s ease-out infinite}
-.finito .occhiello::before{animation:none;background:var(--oro-chiaro)}
+.hud{position:relative;min-height:100%;max-width:480px;margin:0 auto;padding-block:20px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.cima{display:flex;justify-content:space-between;align-items:center;width:100%;gap:10px}
+.pill{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--tenue);
+  padding:8px 13px;border:1px solid var(--linea);border-radius:999px;background:var(--vetro);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);white-space:nowrap}
+.pill .led{width:7px;height:7px;border-radius:50%;background:var(--oro);box-shadow:0 0 0 0 rgba(198,161,91,.7);animation:pulsa 1.6s ease-out infinite}
+.finito .pill .led{animation:none;background:#9FD48B}
 @keyframes pulsa{to{box-shadow:0 0 0 9px rgba(198,161,91,0)}}
-
-.segno{position:relative;width:min(280px,72vw);aspect-ratio:1;max-width:100%}
-.segno svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.anello-fondo{fill:none;stroke:var(--linea);stroke-width:2}
-.anello{fill:none;stroke:url(#gradOro);stroke-width:3.2;stroke-linecap:round;filter:url(#bagliore)}
-.testa{fill:var(--oro-chiaro);filter:url(#bagliore)}
-.tacche line{stroke:var(--linea);stroke-width:1}
-.vuoto{fill:none;stroke:var(--tenue);stroke-width:.9;stroke-dasharray:1400;stroke-dashoffset:1400;animation:traccia 2.4s cubic-bezier(.65,0,.35,1) .2s forwards}
-@keyframes traccia{to{stroke-dashoffset:0}}
-.m-oro{filter:url(#bagliore)}
-.respiro{animation:respiro 4s ease-in-out infinite;transform-origin:128px 128px}
-@keyframes respiro{50%{transform:scale(1.025)}}
-.finito .respiro{animation:colpo .9s cubic-bezier(.22,1.4,.36,1)}
-@keyframes colpo{0%{transform:scale(1)}35%{transform:scale(1.12)}100%{transform:scale(1)}}
-
-.perc{display:flex;align-items:flex-start;justify-content:center;font-weight:800;font-size:clamp(64px,19vw,92px);line-height:.9;letter-spacing:-.05em;font-variant-numeric:tabular-nums;
-  background:linear-gradient(100deg,var(--oro) 20%,var(--oro-chiaro) 45%,var(--oro) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:luccica 3.2s linear infinite}
+.spazio{flex:1 1 auto;min-height:min(52vh,430px)}
+.perc{display:flex;align-items:flex-start;justify-content:center;font-weight:800;font-size:clamp(60px,17vw,88px);line-height:.9;letter-spacing:-.05em;font-variant-numeric:tabular-nums;
+  background:linear-gradient(100deg,var(--oro) 20%,var(--oro-chiaro) 45%,var(--oro) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:luccica 3.2s linear infinite;
+  text-shadow:0 0 40px rgba(198,161,91,.15)}
 .perc small{font-size:.38em;margin:.18em 0 0 .06em;letter-spacing:0}
 @keyframes luccica{from{background-position:120% 0}to{background-position:-130% 0}}
-h1{font-family:var(--display);font-weight:500;font-size:clamp(22px,6vw,28px);line-height:1.15;margin:0;text-wrap:balance}
-.passo{font-size:14px;color:var(--tenue);min-height:1.4em;transition:opacity .3s}
+h1{font-family:var(--display);font-weight:500;font-size:clamp(21px,5.6vw,27px);line-height:1.15;margin:0;text-wrap:balance}
+.passo{font-size:14px;color:var(--tenue);min-height:1.4em}
 .passo.cambia{animation:entra .5s cubic-bezier(.22,1,.36,1)}
 @keyframes entra{from{opacity:0;transform:translateY(8px);filter:blur(4px)}}
 
-.passi{width:100%;display:flex;flex-direction:column;gap:8px;margin:4px 0 0;padding:0;list-style:none}
-.passi li{position:relative;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;border:1px solid var(--linea);background:var(--velo);backdrop-filter:blur(10px);
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.stat{padding:12px 10px 11px;border-radius:16px;border:1px solid var(--linea);background:var(--vetro);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);min-width:0;text-align:left}
+.stat .et{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--tenue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .val{margin-top:6px;font-weight:800;font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .val span{font-size:13px;font-weight:600;color:var(--tenue);letter-spacing:0}
+.stat .mini{margin-top:8px;height:3px;border-radius:9px;background:var(--linea);overflow:hidden}
+.stat .mini i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--oro),var(--oro-chiaro));transition:width .8s cubic-bezier(.22,1,.36,1)}
+.stat.vivo .val{animation:batte 1s steps(1) infinite}
+@keyframes batte{50%{color:var(--oro-chiaro)}}
+
+.passi{width:100%;display:flex;flex-direction:column;gap:7px;margin:0;padding:0;list-style:none}
+.passi li{position:relative;display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:1px solid var(--linea);background:var(--vetro);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   text-align:left;font-size:14px;color:var(--tenue);overflow:hidden;animation:sale .6s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i)*70ms)}
 @keyframes sale{from{opacity:0;transform:translateY(12px)}}
-.passi .ico{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--linea);display:grid;place-items:center}
+.passi .ico{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--linea);display:grid;place-items:center;box-sizing:border-box}
 .passi .fatto{color:var(--avorio)}
 .passi .fatto .ico{border-color:var(--oro);background:var(--oro)}
 .passi .fatto .ico svg{stroke:var(--notte);stroke-dasharray:20;stroke-dashoffset:20;animation:spunta .5s .15s ease-out forwards}
 @keyframes spunta{to{stroke-dashoffset:0}}
-.passi .corso{color:var(--avorio);border-color:rgba(198,161,91,.45)}
+.passi .corso{color:var(--avorio);border-color:rgba(198,161,91,.5)}
 .passi .corso .ico{border-color:var(--oro);border-top-color:transparent;animation:gira .9s linear infinite}
 @keyframes gira{to{transform:rotate(360deg)}}
-.passi .corso::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(198,161,91,.16) 50%,transparent 70%);background-size:250% 100%;animation:luccica 1.8s linear infinite}
+.passi .corso::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(198,161,91,.18) 50%,transparent 70%);background-size:250% 100%;animation:luccica 1.8s linear infinite}
 .ora{font-size:11px;letter-spacing:.06em;color:var(--tenue)}
+.finito .perc{animation:luccica 1.2s linear infinite}
 
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.vuoto{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
-<div class="luci" aria-hidden="true"><i></i><i></i><i></i></div>
-<canvas id="fondo" aria-hidden="true"></canvas>
+<canvas id="scena3d" aria-hidden="true"></canvas>
+<div class="vignetta" aria-hidden="true"></div>
 <div class="grana" aria-hidden="true"></div>
 
-<main class="scena" id="scena">
-  <div class="occhiello" id="occhiello">mezzeuro · in lavorazione</div>
-  <div class="segno" aria-hidden="true">
-    <svg viewBox="0 0 256 256">
-      <defs>
-        <linearGradient id="gradOro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EBD39B"/><stop offset=".5" stop-color="#C6A15B"/><stop offset="1" stop-color="#9C7A3C"/></linearGradient>
-        <linearGradient id="liquido" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EBD39B"/><stop offset=".55" stop-color="#C6A15B"/><stop offset="1" stop-color="#8E6C33"/></linearGradient>
-        <linearGradient id="riflesso" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-        <filter id="bagliore" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="livello"><path id="onda1" d="M0 256H256V256H0Z"/></clipPath>
-        <clipPath id="formaM"><path d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/></clipPath>
-      </defs>
-      <g class="tacche" id="tacche"></g>
-      <circle class="anello-fondo" cx="128" cy="128" r="118"/>
-      <circle class="anello" id="anello" cx="128" cy="128" r="118" transform="rotate(-90 128 128)" stroke-dasharray="741.4" stroke-dashoffset="741.4"/>
-      <circle class="testa" id="testa" r="4.5" cx="128" cy="10"/>
-      <g class="respiro">
-        <path class="vuoto" d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/>
-        <g clip-path="url(#formaM)">
-          <g class="m-oro">
-            <path id="onda2" fill="#C6A15B" opacity=".45" d="M0 256H256V256H0Z"/>
-            <rect x="0" y="0" width="256" height="256" fill="url(#liquido)" clip-path="url(#livello)"/>
-          </g>
-          <rect id="lampo" x="-80" y="60" width="60" height="140" fill="url(#riflesso)" transform="skewX(-20)"/>
-        </g>
-      </g>
-    </svg>
-  </div>
-  <div class="perc" id="perc" aria-live="polite"><span id="num">0</span><small>%</small></div>
+<main class="hud" id="hud">
+  <div class="cima"><span class="pill"><span class="led"></span><span id="stato">in lavorazione</span></span><span class="pill" id="orologio">--:--</span></div>
+  <div class="spazio" aria-hidden="true"></div>
+  <div class="perc" aria-live="polite"><span id="num">0</span><small>%</small></div>
   <h1 id="titolo">Nessun lavoro in corso</h1>
   <div class="passo" id="passo">Quando mi chiedi di generare un post, qui vedi a che punto sono.</div>
+  <div class="stats">
+    <div class="stat" id="statTempo"><div class="et">Mancano</div><div class="val" id="tempo">–</div><div class="mini"><i id="miniTempo"></i></div></div>
+    <div class="stat"><div class="et" id="etProd">Prodotti</div><div class="val" id="prod">–</div><div class="mini"><i id="miniProd"></i></div></div>
+    <div class="stat"><div class="et">Passo</div><div class="val" id="npasso">–</div><div class="mini"><i id="miniPasso"></i></div></div>
+  </div>
   <ol class="passi" id="passi"></ol>
   <div class="ora" id="ora"></div>
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
+  var M_PATH='M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z';
   var ridotto=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $=function(id){return document.getElementById(id)};
-  var CIRC=2*Math.PI*118, mostrata=0, obiettivo=0, finito=false;
+  var stato={p:0,vis:0,finito:false,burstAt:-1};
 
-  // tacche dell'anello, come un quadrante
-  var t='';for(var k=0;k<60;k++){var a=k/60*2*Math.PI,r1=k%5?124:122,r2=127;t+='<line x1="'+(128+r1*Math.sin(a)).toFixed(1)+'" y1="'+(128-r1*Math.cos(a)).toFixed(1)+'" x2="'+(128+r2*Math.sin(a)).toFixed(1)+'" y2="'+(128-r2*Math.cos(a)).toFixed(1)+'"/>'}
-  $('tacche').innerHTML=t;
-
-  // ---- fondo: guilloché che ruota + polvere d'oro + monete al traguardo
-  var cv=$('fondo'),cx=cv.getContext('2d'),W,H,dpr,rosa=null,polvere=[],monete=[];
-  function guilloche(R){
-    var c=document.createElement('canvas'),s=Math.ceil(R*2.3);c.width=c.height=s;var g=c.getContext('2d');g.translate(s/2,s/2);
-    g.strokeStyle='rgba(198,161,91,.55)';g.lineWidth=.8;
-    [[1,.07,22,14],[.74,.05,16,12],[.5,.14,10,10]].forEach(function(L){
-      for(var c2=0;c2<L[3];c2++){g.globalAlpha=.35;g.beginPath();for(var i=0;i<=720;i++){var th=i/720*2*Math.PI,r=R*L[0]+R*L[1]*Math.sin(L[2]*th+c2*2*Math.PI/L[3]);g.lineTo(r*Math.cos(th),r*Math.sin(th))}g.stroke()}
-    });
-    g.globalAlpha=.4;[1.14,1.16,.86,.62].forEach(function(f){g.beginPath();g.arc(0,0,R*f,0,7);g.stroke()});
-    return c;
+  // ================= HUD =================
+  setInterval(function(){$('orologio').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})},1000);
+  var dati=null,passoPrima='';
+  function fmtTempo(sec){if(sec<=0)return'0:00';var m=Math.floor(sec/60),s=Math.floor(sec%60);return m>=60?Math.floor(m/60)+'h '+(m%60)+'m':m+':'+(s<10?'0':'')+s}
+  function tickTempo(){
+    if(!dati)return;var el=$('tempo'),box=$('statTempo');
+    if(stato.finito){el.innerHTML='Finito';box.classList.remove('vivo');$('miniTempo').style.width='100%';return}
+    var fine=dati.fineStimata?new Date(dati.fineStimata):null,ini=dati.inizio?new Date(dati.inizio):null;
+    if(fine&&!isNaN(fine)){var rest=(fine-Date.now())/1000;el.innerHTML=rest>0?fmtTempo(rest)+' <span>min</span>':'quasi';box.classList.add('vivo');
+      if(ini&&!isNaN(ini))$('miniTempo').style.width=Math.max(0,Math.min(100,(Date.now()-ini)/(fine-ini)*100))+'%'}
+    else if(typeof dati.minutiRimasti==='number'){el.innerHTML='~'+Math.max(0,Math.round(dati.minutiRimasti))+' <span>min</span>';box.classList.remove('vivo');$('miniTempo').style.width=stato.p+'%'}
+    else{el.textContent='–';box.classList.remove('vivo')}
   }
-  function misura(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);rosa=guilloche(Math.max(W,H)*.32)}
-  addEventListener('resize',misura);misura();
-  for(var i=0;i<60;i++)polvere.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,v:Math.random()*.6+.2,o:Math.random()*Math.PI*2});
-  function scoppio(){
-    var sx=W/2,sy=H*.38;
-    for(var i=0;i<90;i++){var a=Math.random()*Math.PI*2,v=4+Math.random()*9;monete.push({x:sx,y:sy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-5,r:4+Math.random()*7,rot:Math.random()*6,vr:(Math.random()-.5)*.4,f:Math.random()*6,vita:1})}
-  }
-
-  // ---- logo: livello liquido
-  function ondaPath(y,amp,fase,freq){var d='M0 256 L0 '+y.toFixed(1);for(var x=0;x<=256;x+=8)d+=' L'+x+' '+(y+amp*Math.sin(x/freq+fase)).toFixed(1);return d+' L256 256Z'}
-
-  var t0=performance.now(),ultimo=t0;
-  function frame(now){
-    var dt=Math.min(50,now-ultimo);ultimo=now;var s=(now-t0)/1000;
-    var diff=obiettivo-mostrata;mostrata=Math.abs(diff)<.05?obiettivo:mostrata+diff*(1-Math.pow(.92,dt/16));
-    $('num').textContent=Math.round(mostrata);
-    var p=mostrata/100;
-    $('anello').setAttribute('stroke-dashoffset',(CIRC*(1-p)).toFixed(1));
-    var a=p*2*Math.PI;$('testa').setAttribute('cx',(128+118*Math.sin(a)).toFixed(1));$('testa').setAttribute('cy',(128-118*Math.cos(a)).toFixed(1));
-    $('testa').style.opacity=p>0&&p<1?1:0;
-    var y=178-104*p,amp=(p>0&&p<1&&!ridotto)?3.2:0;
-    $('onda1').setAttribute('d',ondaPath(y,amp,s*2.2,22));
-    $('onda2').setAttribute('d',ondaPath(y-3,amp*1.3,-s*1.7+1,17));
-    var lx=((s*70)%420)-120;$('lampo').setAttribute('x',lx.toFixed(1));
-
-    cx.clearRect(0,0,W,H);
-    if(rosa){var v=ridotto?0:s*(.04+p*.12);
-      cx.save();cx.translate(W/2,H*.38);cx.rotate(v);cx.globalAlpha=.28+p*.25;cx.drawImage(rosa,-rosa.width/2,-rosa.height/2);cx.restore();
-      cx.save();cx.translate(W/2,H*.38);cx.rotate(-v*1.6);cx.scale(.62,.62);cx.globalAlpha=.22;cx.drawImage(rosa,-rosa.width/2,-rosa.height/2);cx.restore()}
-    if(!ridotto){
-      cx.fillStyle='#EBD39B';
-      polvere.forEach(function(d){d.y-=d.v*(.4+p*2.2)*dt/16/H*2;if(d.y<-.02){d.y=1.02;d.x=Math.random()}
-        cx.globalAlpha=.25+.35*Math.sin(s*2+d.o)*.5+.2;cx.beginPath();cx.arc(d.x*W+Math.sin(s+d.o)*12,d.y*H,d.r,0,7);cx.fill()});
-      monete=monete.filter(function(m){m.vy+=.32;m.vx*=.985;m.x+=m.vx;m.y+=m.vy;m.rot+=m.vr;m.f+=.25;m.vita-=.006;
-        var w=m.r*Math.abs(Math.cos(m.f));cx.save();cx.translate(m.x,m.y);cx.rotate(m.rot);cx.globalAlpha=Math.max(0,m.vita);
-        var g=cx.createLinearGradient(-w,0,w,0);g.addColorStop(0,'#8E6C33');g.addColorStop(.5,'#EBD39B');g.addColorStop(1,'#C6A15B');
-        cx.fillStyle=g;cx.beginPath();cx.ellipse(0,0,Math.max(.6,w),m.r,0,0,7);cx.fill();cx.restore();return m.vita>0&&m.y<H+40});
-    }
-    cx.globalAlpha=1;
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-
-  var passoPrima='';
+  setInterval(tickTempo,1000);
+  function num(n){return Number(n||0).toLocaleString('it-IT')}
   function mostra(s){
-    var p=Math.max(0,Math.min(100,Number(s.percentuale)||0));
-    obiettivo=p;if(ridotto)mostrata=p;
-    var ora=p>=100;
-    if(ora&&!finito&&!ridotto)setTimeout(scoppio,350);
-    finito=ora;
-    $('scena').classList.toggle('finito',ora);
+    dati=s;var p=Math.max(0,Math.min(100,Number(s.percentuale)||0));
+    var ora=p>=100;if(ora&&!stato.finito)stato.burstAt=performance.now()+300;
+    stato.p=p;stato.finito=ora;if(ridotto)stato.vis=p;
+    $('hud').classList.toggle('finito',ora);
+    $('stato').textContent=ora?'pronto':'in lavorazione';
     $('titolo').textContent=s.titolo||'Lavoro in corso';
-    var testo=ora?'Fatto. Trovi tutto nella chat.':(s.passo||'');
-    if(testo!==passoPrima){var el=$('passo');el.textContent=testo;el.classList.remove('cambia');void el.offsetWidth;el.classList.add('cambia');passoPrima=testo}
-    $('occhiello').textContent=ora?'mezzeuro · pronto':'mezzeuro · in lavorazione';
+    var t=ora?'Fatto. Trovi tutto nella chat.':(s.passo||'');
+    if(t!==passoPrima){var el=$('passo');el.textContent=t;el.classList.remove('cambia');void el.offsetWidth;el.classList.add('cambia');passoPrima=t}
+    var pr=s.prodotti||null;
+    if(pr&&pr.totale){$('etProd').textContent=pr.unita||'Prodotti';$('prod').innerHTML=num(pr.fatti)+' <span>/ '+num(pr.totale)+'</span>';$('miniProd').style.width=Math.min(100,pr.fatti/pr.totale*100)+'%'}
+    else{$('etProd').textContent='Prodotti';$('prod').textContent='–';$('miniProd').style.width='0'}
+    var ps=Array.isArray(s.passi)?s.passi:[],fatti=ps.filter(function(x){return x&&x.stato==='fatto'}).length,cur=ps.findIndex(function(x){return x&&x.stato==='in corso'});
+    if(ps.length){$('npasso').innerHTML=(ora?ps.length:(cur>=0?cur+1:fatti))+' <span>/ '+ps.length+'</span>';$('miniPasso').style.width=(fatti/ps.length*100)+'%'}
     var ol=$('passi');ol.textContent='';
-    (Array.isArray(s.passi)?s.passi:[]).forEach(function(it,i){
-      var li=document.createElement('li'),ic=document.createElement('span'),tx=document.createElement('span');
-      var st=it&&it.stato;li.className=st==='fatto'?'fatto':st==='in corso'?'corso':'';li.style.setProperty('--i',i);
-      ic.className='ico';if(st==='fatto')ic.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.2 5 8.6 9.6 3.6"/></svg>';
+    ps.forEach(function(it,i){
+      var li=document.createElement('li'),ic=document.createElement('span'),tx=document.createElement('span'),st=it&&it.stato;
+      li.className=st==='fatto'?'fatto':st==='in corso'?'corso':'';li.style.setProperty('--i',i);ic.className='ico';
+      if(st==='fatto')ic.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.2 5 8.6 9.6 3.6"/></svg>';
       tx.textContent=(it&&it.testo)||'';li.append(ic,tx);ol.append(li);
     });
     if(s.aggiornato){var d=new Date(s.aggiornato);if(!isNaN(d))$('ora').textContent='Aggiornato alle '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}
+    tickTempo();
   }
-
   window.claude&&claude.use('db').then(function(db){
     if(!db){$('passo').textContent='Apri questa pagina da claude.ai, con il tuo account, per vedere i progressi.';return}
     db.doc('stato/corrente').onSnapshot(function(snap){if(snap.exists)mostra(snap.data())},function(){$('passo').textContent='Collegamento interrotto. Ricarica la pagina.'});
   });
+
+  // contatore che insegue la percentuale, anche senza 3D
+  (function(){var u=performance.now();(function conta(n){var dt=Math.min(.1,((n||u)-u)/1000);u=n||u;var d=stato.p-stato.vis;stato.vis=Math.abs(d)<.05?stato.p:stato.vis+d*(1-Math.exp(-dt*4));$('num').textContent=Math.round(stato.vis);requestAnimationFrame(conta)})()})();
+
+  if(!window.THREE){$('scena3d').hidden=true;return}
+  var T=THREE;
+
+  // ================= texture disegnate =================
+  function tracciatoM(ctx,cx,cy,s){ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);ctx.translate(-128,-126);ctx.fill(new Path2D(M_PATH));ctx.restore()}
+  function rosone(g,cx,cy,R,col,alpha){g.save();g.strokeStyle=col;g.globalAlpha=alpha;g.lineWidth=1;
+    [[1,.08,22,10],[.72,.06,16,8],[.46,.16,10,8]].forEach(function(L){for(var c=0;c<L[3];c++){g.beginPath();for(var i=0;i<=400;i++){var th=i/400*Math.PI*2,r=R*L[0]+R*L[1]*Math.sin(L[2]*th+c*Math.PI*2/L[3]);g.lineTo(cx+r*Math.cos(th),cy+r*Math.sin(th))}g.stroke()}});g.restore()}
+  function texMoneta(){var c=document.createElement('canvas');c.width=c.height=256;var g=c.getContext('2d');
+    var gr=g.createRadialGradient(100,90,10,128,128,130);gr.addColorStop(0,'#F3DFA8');gr.addColorStop(.6,'#C6A15B');gr.addColorStop(1,'#7E5D27');g.fillStyle=gr;g.fillRect(0,0,256,256);
+    g.strokeStyle='rgba(90,60,20,.55)';g.lineWidth=5;g.beginPath();g.arc(128,128,112,0,7);g.stroke();
+    g.lineWidth=1.2;for(var k=0;k<90;k++){var a=k/90*Math.PI*2;g.beginPath();g.moveTo(128+118*Math.cos(a),128+118*Math.sin(a));g.lineTo(128+127*Math.cos(a),128+127*Math.sin(a));g.stroke()}
+    rosone(g,128,128,70,'rgba(110,30,44,.6)',.35);
+    g.fillStyle='rgba(95,62,22,.9)';tracciatoM(g,128,128,.62);g.fillStyle='rgba(255,240,200,.35)';tracciatoM(g,127,127,.62);
+    var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;t.anisotropy=4;return t}
+  function texBanconota(){var c=document.createElement('canvas');c.width=512;c.height=256;var g=c.getContext('2d');
+    var gr=g.createLinearGradient(0,0,512,256);gr.addColorStop(0,'#7A2333');gr.addColorStop(1,'#4E121D');g.fillStyle=gr;g.fillRect(0,0,512,256);
+    rosone(g,140,128,105,'#C6A15B',.55);rosone(g,400,128,70,'#F5EFE4',.18);
+    g.strokeStyle='rgba(198,161,91,.8)';g.lineWidth=3;g.strokeRect(12,12,488,232);g.lineWidth=1;g.strokeRect(22,22,468,212);
+    g.fillStyle='#F5EFE4';tracciatoM(g,140,128,.55);
+    g.fillStyle='#EBD39B';g.font='600 22px "Bodoni Moda", Didot, serif';g.textAlign='right';g.fillText('mezzeuro',470,64);
+    g.font='800 64px Inter, Arial, sans-serif';g.fillText('½',470,196);g.font='800 13px Inter, Arial, sans-serif';g.fillStyle='rgba(245,239,228,.7)';g.fillText('BUONO DI STUDIO · NON HA VALORE',470,222);
+    var t=new T.CanvasTexture(c);t.encoding=T.sRGBEncoding;t.anisotropy=4;return t}
+
+  // ================= scena =================
+  var cv=$('scena3d'),renderer;
+  try{renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true})}catch(e){cv.hidden=true;return}
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputEncoding=T.sRGBEncoding;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1;renderer.localClippingEnabled=true;
+  var scene=new T.Scene();scene.fog=new T.Fog(0x1E070D,10,21);
+  var cam=new T.PerspectiveCamera(38,1,.1,60);cam.position.set(0,0,10);
+
+  // ambiente riflesso per l'oro: pannelli luminosi caldi in una stanza scura
+  var envS=new T.Scene();envS.background=new T.Color(0x140408);
+  [[0xFFD999,1.3,[0,6,3],[10,1,6]],[0xE0A050,.9,[-7,1,2],[1,6,6]],[0x8A2A3A,.6,[7,0,-2],[1,6,8]],[0xB07A30,.8,[2,-1,8],[5,3,1]],[0xFFF0D0,2.2,[-3,4,6],[1.2,.4,.4]]].forEach(function(b){
+    var m=new T.Mesh(new T.BoxGeometry(b[3][0],b[3][1],b[3][2]),new T.MeshBasicMaterial({color:new T.Color(b[0]).multiplyScalar(b[1])}));m.position.set(b[2][0],b[2][1],b[2][2]);envS.add(m)});
+  var pm=new T.PMREMGenerator(renderer);scene.environment=pm.fromScene(envS,.04).texture;
+
+  scene.add(new T.AmbientLight(0xffe8d0,.25));
+  var key=new T.DirectionalLight(0xFFE2B0,1.6);key.position.set(3,5,6);scene.add(key);
+  var rim=new T.PointLight(0xB04050,1.1,20);rim.position.set(-4,2,-3);scene.add(rim);
+
+  var gruppo=new T.Group();scene.add(gruppo);
+
+  // ---- la m estrusa dal tracciato del logo
+  function forme(d){
+    var out=[],sh=null,x=0,y=0,re=/([MLQHVZ])([^MLQHVZ]*)/g,mm;
+    while((mm=re.exec(d))){var c=mm[1],n=mm[2].trim().split(/[\s,]+/).filter(Boolean).map(Number);
+      if(c==='M'){sh=new T.Shape();out.push(sh);x=n[0];y=n[1];sh.moveTo(x,y);for(var i=2;i<n.length;i+=2){x=n[i];y=n[i+1];sh.lineTo(x,y)}}
+      else if(c==='L'){for(i=0;i<n.length;i+=2){x=n[i];y=n[i+1];sh.lineTo(x,y)}}
+      else if(c==='H'){for(i=0;i<n.length;i++){x=n[i];sh.lineTo(x,y)}}
+      else if(c==='V'){for(i=0;i<n.length;i++){y=n[i];sh.lineTo(x,y)}}
+      else if(c==='Q'){for(i=0;i<n.length;i+=4){sh.quadraticCurveTo(n[i],n[i+1],n[i+2],n[i+3]);x=n[i+2];y=n[i+3]}}
+      else if(c==='Z'){sh.closePath()}}
+    return out}
+  var geoM=new T.ExtrudeGeometry(forme(M_PATH),{depth:16,bevelEnabled:true,bevelThickness:2.2,bevelSize:1.4,bevelSegments:3,curveSegments:10});
+  geoM.translate(-128,-126,-8);geoM.scale(3.6/194,-3.6/194,3.6/194);geoM.computeVertexNormals();
+  var livello=new T.Plane(new T.Vector3(0,-1,0),0),sopra=new T.Plane(new T.Vector3(0,1,0),0);
+  var oro=new T.MeshStandardMaterial({color:0xE0AC4A,metalness:1,roughness:.28,clippingPlanes:[livello]});
+  var fantasma=new T.MeshStandardMaterial({color:0xF5EFE4,metalness:.1,roughness:.1,transparent:true,opacity:.1,depthWrite:false,clippingPlanes:[sopra]});
+  var mOro=new T.Mesh(geoM,oro),mGhost=new T.Mesh(geoM,fantasma);
+  var spigoli=new T.LineSegments(new T.EdgesGeometry(geoM,30),new T.LineBasicMaterial({color:0xEBD39B,transparent:true,opacity:.28,clippingPlanes:[sopra]}));
+  var logo=new T.Group();logo.add(mOro,mGhost,spigoli);gruppo.add(logo);
+  // superficie dell'oro liquido: un velo luminoso al livello
+  var velo=new T.Mesh(new T.PlaneGeometry(4,.5),new T.MeshBasicMaterial({color:0xFFE3A3,transparent:true,opacity:.0,blending:T.AdditiveBlending,depthWrite:false}));
+  velo.rotation.x=-Math.PI/2;gruppo.add(velo);
+
+  // ---- anello di avanzamento con tacche da quadrante di caveau
+  var R=2.55;
+  var anelloBase=new T.Mesh(new T.TorusGeometry(R,.018,8,240),new T.MeshBasicMaterial({color:0xF5EFE4,transparent:true,opacity:.14}));gruppo.add(anelloBase);
+  var tacche=new T.Group();for(var k=0;k<60;k++){var tk=new T.Mesh(new T.BoxGeometry(.012,k%5?.07:.16,.012),new T.MeshBasicMaterial({color:0xF5EFE4,transparent:true,opacity:k%5?.18:.4}));var a=k/60*Math.PI*2;tk.position.set(Math.sin(a)*(R+.16),Math.cos(a)*(R+.16),0);tk.rotation.z=-a;tacche.add(tk)}gruppo.add(tacche);
+  var oroAnello=new T.MeshStandardMaterial({color:0xE0AC4A,metalness:1,roughness:.25,emissive:0x5A3A10,emissiveIntensity:.5});
+  var arco=new T.Mesh(new T.TorusGeometry(R,.055,12,200,.001),oroAnello);arco.rotation.z=Math.PI/2;gruppo.add(arco);var arcoP=-1;
+  var testa=new T.Mesh(new T.SphereGeometry(.1,20,20),new T.MeshBasicMaterial({color:0xFFF0C8}));gruppo.add(testa);
+  var alone=new T.Sprite(new T.SpriteMaterial({map:(function(){var c=document.createElement('canvas');c.width=c.height=64;var g=c.getContext('2d'),r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,'rgba(255,230,170,1)');r.addColorStop(1,'rgba(255,230,170,0)');g.fillStyle=r;g.fillRect(0,0,64,64);return new T.CanvasTexture(c)})(),blending:T.AdditiveBlending,depthWrite:false,transparent:true}));alone.scale.set(.9,.9,1);gruppo.add(alone);
+
+  // ---- facciata di banca sullo sfondo
+  var pietra=new T.MeshStandardMaterial({color:0x3A0E17,metalness:0,roughness:.9,envMapIntensity:.25});
+  var banca=new T.Group();banca.position.set(0,-.6,-8);
+  for(var sg=0;sg<3;sg++){var st=new T.Mesh(new T.BoxGeometry(13-sg*.6,.28,2.6-sg*.3),pietra);st.position.set(0,-3.2+sg*.28,0);banca.add(st)}
+  for(var col=0;col<6;col++){var cx0=-5+col*2,fus=new T.Mesh(new T.CylinderGeometry(.34,.4,5,20,1,false),pietra);fus.position.set(cx0,-.3,0);banca.add(fus);
+    var cap=new T.Mesh(new T.BoxGeometry(1.05,.24,1.05),pietra);cap.position.set(cx0,2.32,0);banca.add(cap);var bas=new T.Mesh(new T.BoxGeometry(1,.22,1),pietra);bas.position.set(cx0,-2.86,0);banca.add(bas)}
+  var trab=new T.Mesh(new T.BoxGeometry(12.4,.55,1.6),pietra);trab.position.y=2.7;banca.add(trab);
+  var fr=new T.Shape();fr.moveTo(-6.4,0);fr.lineTo(6.4,0);fr.lineTo(0,1.9);fr.closePath();
+  var front=new T.Mesh(new T.ExtrudeGeometry(fr,{depth:1.4,bevelEnabled:false}),pietra);front.position.set(0,2.98,-.7);banca.add(front);
+  var stemma=new T.Mesh(new T.CircleGeometry(.45,40),new T.MeshStandardMaterial({map:texMoneta(),metalness:.9,roughness:.3}));stemma.position.set(0,3.6,.72);banca.add(stemma);
+  scene.add(banca);
+
+  // ---- banconote che fluttuano
+  var texB=texBanconota(),note=[];
+  for(var b=0;b<9;b++){var nm=new T.Mesh(new T.PlaneGeometry(1.5,.75),new T.MeshStandardMaterial({map:texB,side:T.DoubleSide,roughness:.8,metalness:0,transparent:true,opacity:.6}));
+    nm.userData={x:(Math.random()-.5)*12,y:Math.random()*12-6,z:-2-Math.random()*4,v:.15+Math.random()*.25,f:Math.random()*6,rx:Math.random()*6};scene.add(nm);note.push(nm)}
+
+  // ---- monete: orbite attorno al logo, scoppio al traguardo
+  var N=60,tm=texMoneta(),bordo=new T.MeshStandardMaterial({color:0xD9A84E,metalness:1,roughness:.3});
+  var faccia=new T.MeshStandardMaterial({map:tm,metalness:.7,roughness:.3});
+  var geoC=new T.CylinderGeometry(.2,.2,.035,40);geoC.rotateX(Math.PI/2);
+  var monete=new T.InstancedMesh(geoC,[bordo,faccia,faccia],N);gruppo.add(monete);
+  var mc=[],tmp=new T.Object3D();
+  for(var i=0;i<N;i++)mc.push({r:3.3+Math.random()*2.4,a:Math.random()*Math.PI*2,v:(.25+Math.random()*.35)*(Math.random()<.5?-1:1),y:(Math.random()-.5)*2.6,tilt:(Math.random()-.5)*.9,
+    s:.5+Math.random()*.6,spin:Math.random()*6,vs:2+Math.random()*4,pos:new T.Vector3(),vel:new T.Vector3(),fuga:0});
+
+  function dimensiona(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;
+    var verticale=h>w;cam.fov=verticale?52:38;cam.updateProjectionMatrix();
+    // il logo sta nella fascia libera in alto, sopra il pannello
+    var hudTop=$('num').getBoundingClientRect().top,centroPx=Math.max(120,hudTop*.52),vh=2*Math.tan(cam.fov*Math.PI/360)*cam.position.z;
+    gruppo.position.y=(h/2-centroPx)/h*vh;var sc=Math.min(1,(hudTop*.8/h*vh)/6.4);gruppo.scale.setScalar(Math.max(.55,sc))}
+  addEventListener('resize',dimensiona);
+  var mouse={x:0,y:0};addEventListener('pointermove',function(e){mouse.x=e.clientX/innerWidth-.5;mouse.y=e.clientY/innerHeight-.5});
+
+  var clock=new T.Clock(),t=0;
+  function loop(){
+    var dt=Math.min(.05,clock.getDelta());t+=dt;var p=stato.vis/100,vel=ridotto?0:1;
+    if(!dimensiona.ok){dimensiona();dimensiona.ok=1}
+    // livello dell'oro: la m va da -1.55 a +1.55 (in coordinate del logo)
+    var hW=.94*gruppo.scale.y,base=gruppo.position.y,y=base-hW+2*hW*p+(p>0&&p<1?Math.sin(t*3)*.02:0);
+    livello.constant=p>=1?99:y;sopra.constant=p>=1?99:-y;
+    velo.position.y=(y-base)/gruppo.scale.y;velo.material.opacity=p>0&&p<1?.22+.08*Math.sin(t*4):0;velo.scale.x=1+.04*Math.sin(t*2);
+    logo.rotation.y=vel*(Math.sin(t*.55)*.5)+(stato.finito?Math.max(0,1-(performance.now()-stato.burstAt)/1500)*Math.PI*2:0);
+    logo.rotation.x=vel*Math.sin(t*.4)*.06;
+    // arco
+    var ar=Math.max(.001,p*Math.PI*2);if(Math.abs(ar-arcoP)>.004){arco.geometry.dispose();arco.geometry=new T.TorusGeometry(R,.055,12,200,ar);arco.rotation.z=Math.PI/2-ar;arcoP=ar}
+    var ang=p*Math.PI*2;testa.position.set(Math.sin(ang)*R,Math.cos(ang)*R,0);alone.position.copy(testa.position);testa.visible=alone.visible=p>0&&p<1;
+    alone.material.opacity=.7+.3*Math.sin(t*6);
+    tacche.rotation.z=vel*t*.02;
+    // monete
+    var acc=.35+p*1.6,now=performance.now(),burst=stato.burstAt>0&&now>stato.burstAt&&now-stato.burstAt<4200;
+    if(stato.burstAt>0&&now>stato.burstAt&&!loop.lanciato){loop.lanciato=1;mc.forEach(function(c){var d=c.pos.clone().normalize();c.vel.set(d.x*(5+Math.random()*6),4+Math.random()*7,d.z*4+(Math.random()-.5)*6);c.fuga=1})}
+    if(!stato.finito)loop.lanciato=0;
+    for(var i=0;i<N;i++){var c=mc[i];c.a+=c.v*dt*acc*vel;c.spin+=c.vs*dt*vel;
+      var ox=Math.cos(c.a)*c.r,oz=Math.sin(c.a)*c.r*.55-.6,oy=c.y+Math.sin(c.a*2+i)*.25+ox*c.tilt*.3;
+      if(burst&&c.fuga>0){c.vel.y-=9*dt;c.pos.addScaledVector(c.vel,dt)}
+      else{var tgt=new T.Vector3(ox,oy,oz);c.fuga=0;c.pos.lerp(tgt,c.pos.lengthSq()<.0001?1:Math.min(1,dt*2.2))}
+      tmp.position.copy(c.pos);tmp.rotation.set(c.spin*.7,c.spin,c.tilt);tmp.scale.setScalar(c.s);tmp.updateMatrix();monete.setMatrixAt(i,tmp.matrix)}
+    monete.instanceMatrix.needsUpdate=true;
+    // banconote
+    note.forEach(function(n){var u=n.userData;u.y+=u.v*dt*(.5+p)*vel;if(u.y>7){u.y=-7;u.x=(Math.random()-.5)*12}
+      n.position.set(u.x+Math.sin(t*.6+u.f)*.6,u.y,u.z);n.rotation.set(Math.sin(t*1.3+u.f)*.6+u.rx,Math.sin(t*.9+u.f)*.8,Math.sin(t*.7+u.f)*.4)});
+    // camera
+    cam.position.x+=(mouse.x*1.2+Math.sin(t*.3)*.3*vel-cam.position.x)*.04;cam.position.y+=(-mouse.y*.8-cam.position.y)*.04;
+    var push=stato.finito?Math.max(0,1-Math.abs((now-stato.burstAt)/900-1))*1.2:0;cam.position.z=10-push;cam.lookAt(0,gruppo.position.y*.4,0);
+    rim.intensity=1.1+(stato.finito?Math.max(0,1-(now-stato.burstAt)/1200)*6:0);
+    banca.rotation.y=Math.sin(t*.15)*.05*vel;
+    renderer.render(scene,cam);requestAnimationFrame(loop)}
+  requestAnimationFrame(loop);
+  window.__mezzeuro={mostra:mostra};
 })();
 </script>
