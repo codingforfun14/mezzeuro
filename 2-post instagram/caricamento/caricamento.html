@@ -1,101 +1,205 @@
 <title>mezzeuro in lavorazione</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&family=Inter:wght@400;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&family=Inter:wght@400;600;800&display=swap">
 <style>
-/* Una sola scena bordeaux, come le slide forti del kit: la m si riempie d'oro dal basso */
+/* Scena unica su bordeaux profondo: guilloché da banconota che ruota, la m si riempie d'oro liquido, anello di avanzamento attorno */
 :root{
-  --bordeaux:#6E1E2C; --bordeaux-scuro:#55141F; --avorio:#F5EFE4; --oro:#C6A15B; --avorio-tenue:rgba(245,239,228,.62); --filo:rgba(245,239,228,.14);
+  --notte:#2A0B12; --bordeaux:#6E1E2C; --avorio:#F5EFE4; --oro:#C6A15B; --oro-chiaro:#EBD39B;
+  --tenue:rgba(245,239,228,.58); --velo:rgba(245,239,228,.07); --linea:rgba(245,239,228,.12);
   --display:'Bodoni Moda',Didot,'Times New Roman',serif; --testo:'Inter','Helvetica Neue',Arial,sans-serif;
   color-scheme:dark;
 }
 html,body{height:100%}
-body{background:radial-gradient(120% 90% at 50% 30%,var(--bordeaux) 0%,var(--bordeaux-scuro) 100%) fixed,var(--bordeaux);color:var(--avorio);font-family:var(--testo);
-  display:flex;align-items:center;justify-content:center;padding-block:32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-sizing:border-box}
-.scena{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
-.occhiello{font-weight:800;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--avorio-tenue)}
-.segno{width:min(220px,58vw);aspect-ratio:1;max-width:100%}
-.segno svg{width:100%;height:100%;display:block;overflow:visible}
-.vuoto{fill:none;stroke:var(--avorio-tenue);stroke-width:1.2}
-.pieno{fill:var(--oro)}
-.onda{transition:none}
-.perc{font-weight:800;font-size:64px;line-height:1;letter-spacing:-.04em;color:var(--oro);font-variant-numeric:tabular-nums}
-.perc small{font-size:.45em;margin-left:2px}
-h1{font-family:var(--display);font-weight:500;font-size:26px;line-height:1.2;margin:0;text-wrap:balance}
-.passo{font-size:15px;color:var(--avorio-tenue);min-height:1.3em}
-.barra{width:100%;height:6px;border-radius:999px;background:var(--filo);overflow:hidden}
-.barra i{display:block;height:100%;width:0;background:var(--oro);border-radius:999px;transition:width .8s cubic-bezier(.22,1,.36,1)}
-ol{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:9px;text-align:left}
-li{display:flex;gap:12px;align-items:baseline;font-size:14px;color:var(--avorio-tenue)}
-li b{flex:none;width:16px;font-weight:800;color:var(--avorio-tenue)}
-li.fatto b{color:var(--oro)} li.corso{color:var(--avorio)} li.corso b{color:var(--avorio)}
-.ora{font-size:12px;color:var(--avorio-tenue)}
-.finito .perc{animation:colpo .5s cubic-bezier(.22,1,.36,1)}
-@keyframes colpo{0%{transform:scale(1.25)}100%{transform:scale(1)}}
-@media (prefers-reduced-motion:reduce){.barra i{transition:none}.finito .perc{animation:none}}
+body{margin:0;background:var(--notte);color:var(--avorio);font-family:var(--testo);overflow-x:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-sizing:border-box}
+.luci{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.luci i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;mix-blend-mode:screen}
+.luci i:nth-child(1){width:70vmax;height:70vmax;left:-20vmax;top:-25vmax;background:radial-gradient(circle,var(--bordeaux),transparent 65%);animation:vaga1 18s ease-in-out infinite alternate}
+.luci i:nth-child(2){width:55vmax;height:55vmax;right:-20vmax;bottom:-20vmax;background:radial-gradient(circle,#8B2A3B,transparent 65%);animation:vaga2 22s ease-in-out infinite alternate}
+.luci i:nth-child(3){width:30vmax;height:30vmax;left:40%;top:20%;background:radial-gradient(circle,rgba(198,161,91,.35),transparent 70%);animation:vaga1 26s ease-in-out infinite alternate-reverse}
+@keyframes vaga1{to{transform:translate(12vmax,10vmax) scale(1.15)}}
+@keyframes vaga2{to{transform:translate(-10vmax,-8vmax) scale(.9)}}
+.grana{position:fixed;inset:0;pointer-events:none;opacity:.12;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+canvas#fondo{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+
+.scena{position:relative;min-height:100%;max-width:460px;margin:0 auto;padding-block:28px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center}
+.occhiello{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--tenue);
+  padding:8px 14px;border:1px solid var(--linea);border-radius:999px;background:var(--velo);backdrop-filter:blur(8px)}
+.occhiello::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--oro);box-shadow:0 0 0 0 rgba(198,161,91,.7);animation:pulsa 1.6s ease-out infinite}
+.finito .occhiello::before{animation:none;background:var(--oro-chiaro)}
+@keyframes pulsa{to{box-shadow:0 0 0 9px rgba(198,161,91,0)}}
+
+.segno{position:relative;width:min(280px,72vw);aspect-ratio:1;max-width:100%}
+.segno svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.anello-fondo{fill:none;stroke:var(--linea);stroke-width:2}
+.anello{fill:none;stroke:url(#gradOro);stroke-width:3.2;stroke-linecap:round;filter:url(#bagliore)}
+.testa{fill:var(--oro-chiaro);filter:url(#bagliore)}
+.tacche line{stroke:var(--linea);stroke-width:1}
+.vuoto{fill:none;stroke:var(--tenue);stroke-width:.9;stroke-dasharray:1400;stroke-dashoffset:1400;animation:traccia 2.4s cubic-bezier(.65,0,.35,1) .2s forwards}
+@keyframes traccia{to{stroke-dashoffset:0}}
+.m-oro{filter:url(#bagliore)}
+.respiro{animation:respiro 4s ease-in-out infinite;transform-origin:128px 128px}
+@keyframes respiro{50%{transform:scale(1.025)}}
+.finito .respiro{animation:colpo .9s cubic-bezier(.22,1.4,.36,1)}
+@keyframes colpo{0%{transform:scale(1)}35%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+.perc{display:flex;align-items:flex-start;justify-content:center;font-weight:800;font-size:clamp(64px,19vw,92px);line-height:.9;letter-spacing:-.05em;font-variant-numeric:tabular-nums;
+  background:linear-gradient(100deg,var(--oro) 20%,var(--oro-chiaro) 45%,var(--oro) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:luccica 3.2s linear infinite}
+.perc small{font-size:.38em;margin:.18em 0 0 .06em;letter-spacing:0}
+@keyframes luccica{from{background-position:120% 0}to{background-position:-130% 0}}
+h1{font-family:var(--display);font-weight:500;font-size:clamp(22px,6vw,28px);line-height:1.15;margin:0;text-wrap:balance}
+.passo{font-size:14px;color:var(--tenue);min-height:1.4em;transition:opacity .3s}
+.passo.cambia{animation:entra .5s cubic-bezier(.22,1,.36,1)}
+@keyframes entra{from{opacity:0;transform:translateY(8px);filter:blur(4px)}}
+
+.passi{width:100%;display:flex;flex-direction:column;gap:8px;margin:4px 0 0;padding:0;list-style:none}
+.passi li{position:relative;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;border:1px solid var(--linea);background:var(--velo);backdrop-filter:blur(10px);
+  text-align:left;font-size:14px;color:var(--tenue);overflow:hidden;animation:sale .6s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i)*70ms)}
+@keyframes sale{from{opacity:0;transform:translateY(12px)}}
+.passi .ico{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--linea);display:grid;place-items:center}
+.passi .fatto{color:var(--avorio)}
+.passi .fatto .ico{border-color:var(--oro);background:var(--oro)}
+.passi .fatto .ico svg{stroke:var(--notte);stroke-dasharray:20;stroke-dashoffset:20;animation:spunta .5s .15s ease-out forwards}
+@keyframes spunta{to{stroke-dashoffset:0}}
+.passi .corso{color:var(--avorio);border-color:rgba(198,161,91,.45)}
+.passi .corso .ico{border-color:var(--oro);border-top-color:transparent;animation:gira .9s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+.passi .corso::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(198,161,91,.16) 50%,transparent 70%);background-size:250% 100%;animation:luccica 1.8s linear infinite}
+.ora{font-size:11px;letter-spacing:.06em;color:var(--tenue)}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.vuoto{stroke-dashoffset:0}}
 </style>
+
+<div class="luci" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="fondo" aria-hidden="true"></canvas>
+<div class="grana" aria-hidden="true"></div>
 
 <main class="scena" id="scena">
   <div class="occhiello" id="occhiello">mezzeuro · in lavorazione</div>
   <div class="segno" aria-hidden="true">
     <svg viewBox="0 0 256 256">
-      <defs><clipPath id="liv"><path id="onda" class="onda" d="M0 256H256V256H0Z"/></clipPath></defs>
-      <path class="vuoto" d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/>
-      <path class="pieno" clip-path="url(#liv)" d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/>
+      <defs>
+        <linearGradient id="gradOro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EBD39B"/><stop offset=".5" stop-color="#C6A15B"/><stop offset="1" stop-color="#9C7A3C"/></linearGradient>
+        <linearGradient id="liquido" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EBD39B"/><stop offset=".55" stop-color="#C6A15B"/><stop offset="1" stop-color="#8E6C33"/></linearGradient>
+        <linearGradient id="riflesso" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="bagliore" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="livello"><path id="onda1" d="M0 256H256V256H0Z"/></clipPath>
+        <clipPath id="formaM"><path d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/></clipPath>
+      </defs>
+      <g class="tacche" id="tacche"></g>
+      <circle class="anello-fondo" cx="128" cy="128" r="118"/>
+      <circle class="anello" id="anello" cx="128" cy="128" r="118" transform="rotate(-90 128 128)" stroke-dasharray="741.4" stroke-dashoffset="741.4"/>
+      <circle class="testa" id="testa" r="4.5" cx="128" cy="10"/>
+      <g class="respiro">
+        <path class="vuoto" d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/>
+        <g clip-path="url(#formaM)">
+          <g class="m-oro">
+            <path id="onda2" fill="#C6A15B" opacity=".45" d="M0 256H256V256H0Z"/>
+            <rect x="0" y="0" width="256" height="256" fill="url(#liquido)" clip-path="url(#livello)"/>
+          </g>
+          <rect id="lampo" x="-80" y="60" width="60" height="140" fill="url(#riflesso)" transform="skewX(-20)"/>
+        </g>
+      </g>
     </svg>
   </div>
-  <div class="perc" id="perc" aria-live="polite">0<small>%</small></div>
+  <div class="perc" id="perc" aria-live="polite"><span id="num">0</span><small>%</small></div>
   <h1 id="titolo">Nessun lavoro in corso</h1>
   <div class="passo" id="passo">Quando mi chiedi di generare un post, qui vedi a che punto sono.</div>
-  <div class="barra"><i id="barra"></i></div>
-  <ol id="passi"></ol>
+  <ol class="passi" id="passi"></ol>
   <div class="ora" id="ora"></div>
 </main>
 
 <script>
 (function(){
-  var mostrata=0, obiettivo=0, t0=performance.now(), raf=null;
   var ridotto=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var onda=document.getElementById('onda'), perc=document.getElementById('perc');
-  // la m va da y 76 a 176 nel viewBox: il livello sale dentro quella fascia, con una piccola onda
-  function disegna(now){
-    var p=mostrata/100, y=176-(100*p)-(p>0&&p<1?0:0), a=(p>0&&p<1&&!ridotto)?3:0, ph=(now-t0)/600, d='M0 256 L0 '+y.toFixed(1);
-    for(var x=0;x<=256;x+=16){d+=' L'+x+' '+(y+a*Math.sin(x/28+ph)).toFixed(1)}
-    onda.setAttribute('d',d+' L256 256Z');
-  }
-  function passo(now){
-    var diff=obiettivo-mostrata;
-    mostrata = Math.abs(diff)<.2 ? obiettivo : mostrata+diff*.06;
-    perc.firstChild.nodeValue=Math.round(mostrata);
-    disegna(now);
-    raf=requestAnimationFrame(passo);
-  }
-  raf=requestAnimationFrame(passo);
+  var $=function(id){return document.getElementById(id)};
+  var CIRC=2*Math.PI*118, mostrata=0, obiettivo=0, finito=false;
 
-  function testo(id,v){document.getElementById(id).textContent=v}
+  // tacche dell'anello, come un quadrante
+  var t='';for(var k=0;k<60;k++){var a=k/60*2*Math.PI,r1=k%5?124:122,r2=127;t+='<line x1="'+(128+r1*Math.sin(a)).toFixed(1)+'" y1="'+(128-r1*Math.cos(a)).toFixed(1)+'" x2="'+(128+r2*Math.sin(a)).toFixed(1)+'" y2="'+(128-r2*Math.cos(a)).toFixed(1)+'"/>'}
+  $('tacche').innerHTML=t;
+
+  // ---- fondo: guilloché che ruota + polvere d'oro + monete al traguardo
+  var cv=$('fondo'),cx=cv.getContext('2d'),W,H,dpr,rosa=null,polvere=[],monete=[];
+  function guilloche(R){
+    var c=document.createElement('canvas'),s=Math.ceil(R*2.3);c.width=c.height=s;var g=c.getContext('2d');g.translate(s/2,s/2);
+    g.strokeStyle='rgba(198,161,91,.55)';g.lineWidth=.8;
+    [[1,.07,22,14],[.74,.05,16,12],[.5,.14,10,10]].forEach(function(L){
+      for(var c2=0;c2<L[3];c2++){g.globalAlpha=.35;g.beginPath();for(var i=0;i<=720;i++){var th=i/720*2*Math.PI,r=R*L[0]+R*L[1]*Math.sin(L[2]*th+c2*2*Math.PI/L[3]);g.lineTo(r*Math.cos(th),r*Math.sin(th))}g.stroke()}
+    });
+    g.globalAlpha=.4;[1.14,1.16,.86,.62].forEach(function(f){g.beginPath();g.arc(0,0,R*f,0,7);g.stroke()});
+    return c;
+  }
+  function misura(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);rosa=guilloche(Math.max(W,H)*.32)}
+  addEventListener('resize',misura);misura();
+  for(var i=0;i<60;i++)polvere.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,v:Math.random()*.6+.2,o:Math.random()*Math.PI*2});
+  function scoppio(){
+    var sx=W/2,sy=H*.38;
+    for(var i=0;i<90;i++){var a=Math.random()*Math.PI*2,v=4+Math.random()*9;monete.push({x:sx,y:sy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-5,r:4+Math.random()*7,rot:Math.random()*6,vr:(Math.random()-.5)*.4,f:Math.random()*6,vita:1})}
+  }
+
+  // ---- logo: livello liquido
+  function ondaPath(y,amp,fase,freq){var d='M0 256 L0 '+y.toFixed(1);for(var x=0;x<=256;x+=8)d+=' L'+x+' '+(y+amp*Math.sin(x/freq+fase)).toFixed(1);return d+' L256 256Z'}
+
+  var t0=performance.now(),ultimo=t0;
+  function frame(now){
+    var dt=Math.min(50,now-ultimo);ultimo=now;var s=(now-t0)/1000;
+    var diff=obiettivo-mostrata;mostrata=Math.abs(diff)<.05?obiettivo:mostrata+diff*(1-Math.pow(.92,dt/16));
+    $('num').textContent=Math.round(mostrata);
+    var p=mostrata/100;
+    $('anello').setAttribute('stroke-dashoffset',(CIRC*(1-p)).toFixed(1));
+    var a=p*2*Math.PI;$('testa').setAttribute('cx',(128+118*Math.sin(a)).toFixed(1));$('testa').setAttribute('cy',(128-118*Math.cos(a)).toFixed(1));
+    $('testa').style.opacity=p>0&&p<1?1:0;
+    var y=178-104*p,amp=(p>0&&p<1&&!ridotto)?3.2:0;
+    $('onda1').setAttribute('d',ondaPath(y,amp,s*2.2,22));
+    $('onda2').setAttribute('d',ondaPath(y-3,amp*1.3,-s*1.7+1,17));
+    var lx=((s*70)%420)-120;$('lampo').setAttribute('x',lx.toFixed(1));
+
+    cx.clearRect(0,0,W,H);
+    if(rosa){var v=ridotto?0:s*(.04+p*.12);
+      cx.save();cx.translate(W/2,H*.38);cx.rotate(v);cx.globalAlpha=.28+p*.25;cx.drawImage(rosa,-rosa.width/2,-rosa.height/2);cx.restore();
+      cx.save();cx.translate(W/2,H*.38);cx.rotate(-v*1.6);cx.scale(.62,.62);cx.globalAlpha=.22;cx.drawImage(rosa,-rosa.width/2,-rosa.height/2);cx.restore()}
+    if(!ridotto){
+      cx.fillStyle='#EBD39B';
+      polvere.forEach(function(d){d.y-=d.v*(.4+p*2.2)*dt/16/H*2;if(d.y<-.02){d.y=1.02;d.x=Math.random()}
+        cx.globalAlpha=.25+.35*Math.sin(s*2+d.o)*.5+.2;cx.beginPath();cx.arc(d.x*W+Math.sin(s+d.o)*12,d.y*H,d.r,0,7);cx.fill()});
+      monete=monete.filter(function(m){m.vy+=.32;m.vx*=.985;m.x+=m.vx;m.y+=m.vy;m.rot+=m.vr;m.f+=.25;m.vita-=.006;
+        var w=m.r*Math.abs(Math.cos(m.f));cx.save();cx.translate(m.x,m.y);cx.rotate(m.rot);cx.globalAlpha=Math.max(0,m.vita);
+        var g=cx.createLinearGradient(-w,0,w,0);g.addColorStop(0,'#8E6C33');g.addColorStop(.5,'#EBD39B');g.addColorStop(1,'#C6A15B');
+        cx.fillStyle=g;cx.beginPath();cx.ellipse(0,0,Math.max(.6,w),m.r,0,0,7);cx.fill();cx.restore();return m.vita>0&&m.y<H+40});
+    }
+    cx.globalAlpha=1;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  var passoPrima='';
   function mostra(s){
     var p=Math.max(0,Math.min(100,Number(s.percentuale)||0));
-    if(ridotto) mostrata=p;
-    obiettivo=p;
-    document.getElementById('barra').style.width=p+'%';
-    testo('titolo',s.titolo||'Lavoro in corso');
-    testo('passo',p>=100?'Fatto. Trovi tutto nella chat.':(s.passo||''));
-    testo('occhiello',p>=100?'mezzeuro · pronto':'mezzeuro · in lavorazione');
-    document.getElementById('scena').classList.toggle('finito',p>=100);
-    var ol=document.getElementById('passi'); ol.textContent='';
-    (Array.isArray(s.passi)?s.passi:[]).forEach(function(it){
-      var li=document.createElement('li'), b=document.createElement('b'), sp=document.createElement('span');
-      var st=it&&it.stato; li.className=st==='fatto'?'fatto':st==='in corso'?'corso':'';
-      b.textContent=st==='fatto'?'✓':st==='in corso'?'●':'○'; sp.textContent=(it&&it.testo)||'';
-      li.append(b,sp); ol.append(li);
+    obiettivo=p;if(ridotto)mostrata=p;
+    var ora=p>=100;
+    if(ora&&!finito&&!ridotto)setTimeout(scoppio,350);
+    finito=ora;
+    $('scena').classList.toggle('finito',ora);
+    $('titolo').textContent=s.titolo||'Lavoro in corso';
+    var testo=ora?'Fatto. Trovi tutto nella chat.':(s.passo||'');
+    if(testo!==passoPrima){var el=$('passo');el.textContent=testo;el.classList.remove('cambia');void el.offsetWidth;el.classList.add('cambia');passoPrima=testo}
+    $('occhiello').textContent=ora?'mezzeuro · pronto':'mezzeuro · in lavorazione';
+    var ol=$('passi');ol.textContent='';
+    (Array.isArray(s.passi)?s.passi:[]).forEach(function(it,i){
+      var li=document.createElement('li'),ic=document.createElement('span'),tx=document.createElement('span');
+      var st=it&&it.stato;li.className=st==='fatto'?'fatto':st==='in corso'?'corso':'';li.style.setProperty('--i',i);
+      ic.className='ico';if(st==='fatto')ic.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.2 5 8.6 9.6 3.6"/></svg>';
+      tx.textContent=(it&&it.testo)||'';li.append(ic,tx);ol.append(li);
     });
-    if(s.aggiornato){var d=new Date(s.aggiornato); if(!isNaN(d)) testo('ora','Aggiornato alle '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}))}
+    if(s.aggiornato){var d=new Date(s.aggiornato);if(!isNaN(d))$('ora').textContent='Aggiornato alle '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})}
   }
 
-  window.claude && claude.use('db').then(function(db){
-    if(!db){testo('passo','Apri questa pagina da claude.ai, con il tuo account, per vedere i progressi.');return}
-    db.doc('stato/corrente').onSnapshot(function(snap){ if(snap.exists) mostra(snap.data()) },
-      function(){testo('passo','Collegamento interrotto. Ricarica la pagina.')});
+  window.claude&&claude.use('db').then(function(db){
+    if(!db){$('passo').textContent='Apri questa pagina da claude.ai, con il tuo account, per vedere i progressi.';return}
+    db.doc('stato/corrente').onSnapshot(function(snap){if(snap.exists)mostra(snap.data())},function(){$('passo').textContent='Collegamento interrotto. Ricarica la pagina.'});
   });
 })();
 </script>
