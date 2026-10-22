@@ -11,6 +11,8 @@ I reel con Mezzo girati con Kling, come il reel 01 sul 50/30/20, si inseriscono 
 
 Mi scrivi **"genera ep 4"** (oppure "genera ep 4 reel"). Io preparo slide, caption, hashtag, testo alternativo e storia di lancio nella cartella `carosello-NN-tema/` (o `reel-NN-tema/`), li copio sul Mac e aggiorno lo stato qui sotto. Le cifre di legge (bollo, aliquote, contributi) le ricontrollo su fonti ufficiali quando genero l'episodio.
 
+**Finestra di caricamento:** mentre genero, la pagina https://claude.ai/artifact/Kj58Fd43wZBzvKFqG7mTEE mostra il logo che si riempie e la percentuale. Per Claude: aggiornare con ArtifactData il documento `stato/corrente` (campi `titolo`, `percentuale` 0-100, `passo`, `passi` [{testo, stato: fatto | in corso | da fare}], `aggiornato` ISO) a ogni passo del lavoro, e mettere 100 alla fine.
+
 Stati: ✅ pronto · 🟡 da generare · 📤 pubblicato (lo segno quando me lo dici).
 
 ## Calendario

@@ -1,0 +1,101 @@
+<title>mezzeuro in lavorazione</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&family=Inter:wght@400;800&display=swap">
+<style>
+/* Una sola scena bordeaux, come le slide forti del kit: la m si riempie d'oro dal basso */
+:root{
+  --bordeaux:#6E1E2C; --bordeaux-scuro:#55141F; --avorio:#F5EFE4; --oro:#C6A15B; --avorio-tenue:rgba(245,239,228,.62); --filo:rgba(245,239,228,.14);
+  --display:'Bodoni Moda',Didot,'Times New Roman',serif; --testo:'Inter','Helvetica Neue',Arial,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:radial-gradient(120% 90% at 50% 30%,var(--bordeaux) 0%,var(--bordeaux-scuro) 100%) fixed,var(--bordeaux);color:var(--avorio);font-family:var(--testo);
+  display:flex;align-items:center;justify-content:center;padding-block:32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));box-sizing:border-box}
+.scena{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
+.occhiello{font-weight:800;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--avorio-tenue)}
+.segno{width:min(220px,58vw);aspect-ratio:1;max-width:100%}
+.segno svg{width:100%;height:100%;display:block;overflow:visible}
+.vuoto{fill:none;stroke:var(--avorio-tenue);stroke-width:1.2}
+.pieno{fill:var(--oro)}
+.onda{transition:none}
+.perc{font-weight:800;font-size:64px;line-height:1;letter-spacing:-.04em;color:var(--oro);font-variant-numeric:tabular-nums}
+.perc small{font-size:.45em;margin-left:2px}
+h1{font-family:var(--display);font-weight:500;font-size:26px;line-height:1.2;margin:0;text-wrap:balance}
+.passo{font-size:15px;color:var(--avorio-tenue);min-height:1.3em}
+.barra{width:100%;height:6px;border-radius:999px;background:var(--filo);overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:var(--oro);border-radius:999px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+ol{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:9px;text-align:left}
+li{display:flex;gap:12px;align-items:baseline;font-size:14px;color:var(--avorio-tenue)}
+li b{flex:none;width:16px;font-weight:800;color:var(--avorio-tenue)}
+li.fatto b{color:var(--oro)} li.corso{color:var(--avorio)} li.corso b{color:var(--avorio)}
+.ora{font-size:12px;color:var(--avorio-tenue)}
+.finito .perc{animation:colpo .5s cubic-bezier(.22,1,.36,1)}
+@keyframes colpo{0%{transform:scale(1.25)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.barra i{transition:none}.finito .perc{animation:none}}
+</style>
+
+<main class="scena" id="scena">
+  <div class="occhiello" id="occhiello">mezzeuro · in lavorazione</div>
+  <div class="segno" aria-hidden="true">
+    <svg viewBox="0 0 256 256">
+      <defs><clipPath id="liv"><path id="onda" class="onda" d="M0 256H256V256H0Z"/></clipPath></defs>
+      <path class="vuoto" d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/>
+      <path class="pieno" clip-path="url(#liv)" d="M80.69 78.75L80.69 172.72L92.1 172.72L92.1 175.31L42 175.31L42 172.72L55.75 172.72L55.75 81.34L42 81.34L42 78.75ZM140.55 108.28L140.55 172.72L151.98 172.72L151.98 175.31L104.12 175.31L104.12 172.72L115.53 172.72L115.53 110.08Q115.53 101.27 114.88 95.1Q114.23 88.92 112.06 85.71Q109.89 82.5 105.32 82.5Q98.62 82.5 93.92 86.88Q89.21 91.26 86.29 98.21Q83.37 105.15 82.03 113.07Q80.69 120.98 80.69 128.08L79.06 128.6Q79.06 121.18 80.37 112.24Q81.68 103.310 85.28 95.2Q88.88 87.09 95.58 81.89Q102.27 76.69 112.99 76.69Q123.54 76.69 129.54 80.76Q135.53 84.84 138.04 91.99Q140.55 99.15 140.55 108.28ZM200.31 108.28L200.31 172.72L214 172.72L214 175.31L163.87 175.31L163.87 172.72L175.35 172.72L175.35 110.08Q175.35 101.27 174.59 95.1Q173.84 88.92 171.57 85.71Q169.3 82.5 164.71 82.5Q157.93 82.5 153.29 86.88Q148.65 91.26 145.85 98.21Q143.05 105.15 141.8 113.07Q140.55 120.98 140.55 128.08L138.82 128.6Q138.82 121.18 140.05 112.24Q141.28 103.31 144.73 95.2Q148.17 87.09 154.85 81.89Q161.52 76.69 172.36 76.69Q182.91 76.69 189 80.76Q195.08 84.84 197.69 91.99Q200.31 99.15 200.31 108.28ZM31.41 112.86H224.59V119.92H31.41ZM31.41 132.08H224.59V139.14H31.41Z"/>
+    </svg>
+  </div>
+  <div class="perc" id="perc" aria-live="polite">0<small>%</small></div>
+  <h1 id="titolo">Nessun lavoro in corso</h1>
+  <div class="passo" id="passo">Quando mi chiedi di generare un post, qui vedi a che punto sono.</div>
+  <div class="barra"><i id="barra"></i></div>
+  <ol id="passi"></ol>
+  <div class="ora" id="ora"></div>
+</main>
+
+<script>
+(function(){
+  var mostrata=0, obiettivo=0, t0=performance.now(), raf=null;
+  var ridotto=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var onda=document.getElementById('onda'), perc=document.getElementById('perc');
+  // la m va da y 76 a 176 nel viewBox: il livello sale dentro quella fascia, con una piccola onda
+  function disegna(now){
+    var p=mostrata/100, y=176-(100*p)-(p>0&&p<1?0:0), a=(p>0&&p<1&&!ridotto)?3:0, ph=(now-t0)/600, d='M0 256 L0 '+y.toFixed(1);
+    for(var x=0;x<=256;x+=16){d+=' L'+x+' '+(y+a*Math.sin(x/28+ph)).toFixed(1)}
+    onda.setAttribute('d',d+' L256 256Z');
+  }
+  function passo(now){
+    var diff=obiettivo-mostrata;
+    mostrata = Math.abs(diff)<.2 ? obiettivo : mostrata+diff*.06;
+    perc.firstChild.nodeValue=Math.round(mostrata);
+    disegna(now);
+    raf=requestAnimationFrame(passo);
+  }
+  raf=requestAnimationFrame(passo);
+
+  function testo(id,v){document.getElementById(id).textContent=v}
+  function mostra(s){
+    var p=Math.max(0,Math.min(100,Number(s.percentuale)||0));
+    if(ridotto) mostrata=p;
+    obiettivo=p;
+    document.getElementById('barra').style.width=p+'%';
+    testo('titolo',s.titolo||'Lavoro in corso');
+    testo('passo',p>=100?'Fatto. Trovi tutto nella chat.':(s.passo||''));
+    testo('occhiello',p>=100?'mezzeuro · pronto':'mezzeuro · in lavorazione');
+    document.getElementById('scena').classList.toggle('finito',p>=100);
+    var ol=document.getElementById('passi'); ol.textContent='';
+    (Array.isArray(s.passi)?s.passi:[]).forEach(function(it){
+      var li=document.createElement('li'), b=document.createElement('b'), sp=document.createElement('span');
+      var st=it&&it.stato; li.className=st==='fatto'?'fatto':st==='in corso'?'corso':'';
+      b.textContent=st==='fatto'?'✓':st==='in corso'?'●':'○'; sp.textContent=(it&&it.testo)||'';
+      li.append(b,sp); ol.append(li);
+    });
+    if(s.aggiornato){var d=new Date(s.aggiornato); if(!isNaN(d)) testo('ora','Aggiornato alle '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}))}
+  }
+
+  window.claude && claude.use('db').then(function(db){
+    if(!db){testo('passo','Apri questa pagina da claude.ai, con il tuo account, per vedere i progressi.');return}
+    db.doc('stato/corrente').onSnapshot(function(snap){ if(snap.exists) mostra(snap.data()) },
+      function(){testo('passo','Collegamento interrotto. Ricarica la pagina.')});
+  });
+})();
+</script>
