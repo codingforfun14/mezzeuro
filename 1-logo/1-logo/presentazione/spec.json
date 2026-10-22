@@ -1,0 +1,38 @@
+{
+  "brand": "mezzeuro",
+  "tagline": "Finanza personale per giovani",
+  "brief": "Un canale Instagram e YouTube che insegna la finanza personale ai giovani. Il logo deve essere elegante e classico, da private banking, ma far pensare subito ai soldi, e deve funzionare prima di tutto come foto profilo rotonda.",
+  "adjectives": ["elegante", "autorevole", "sobrio", "chiaro"],
+  "criteria": "Obiettivo: riconoscibile a 32 px come foto profilo, fa pensare alla finanza senza cliché (frecce, grafici, salvadanai), funziona a un colore.",
+  "industry": "finance",
+  "mockups": ["social", "website", "payment-card", "business-card", "favicon-tab", "app-icon"],
+  "nav": ["Video", "Guide", "Chi sono"],
+  "brand_color": "#6E1E2C",
+  "tile_color": "#6E1E2C",
+  "greyscale": false,
+  "final": true,
+  "deck_title": "identità definitiva",
+  "concepts": [
+    {
+      "name": "La valuta",
+      "symbol": "../logo/mezzeuro-simbolo.svg",
+      "lockup": "../logo/mezzeuro-orizzontale.svg",
+      "stacked": "../logo/mezzeuro-verticale.svg",
+      "avatar": "../social/sorgenti/profilo-avorio-cerchio.svg",
+      "symbol_on_tile": "../logo/mezzeuro-simbolo-oro.svg",
+      "lockup_on_tile": "../logo/mezzeuro-orizzontale-oro.svg",
+      "stacked_on_tile": "../logo/mezzeuro-verticale-oro.svg",
+      "symbol_on_dark": "../logo/mezzeuro-simbolo-negativo.svg",
+      "lockup_on_dark": "../logo/mezzeuro-orizzontale-negativo.svg",
+      "stacked_on_dark": "../logo/mezzeuro-verticale-negativo.svg",
+      "idea": "La m di mezzeuro attraversata dalle due barre dell'euro: il canale ha la sua moneta.",
+      "rationale": [
+        "Usa la grammatica dei simboli di valuta (€, ¥, ₩): fa pensare alla finanza senza cliché",
+        "Bodoni, il carattere del tipografo parmense: classico, italiano, da private banking",
+        "Bordeaux e oro: caldi e rari in un settore dominato dal blu",
+        "Regge a 32 px come foto profilo, avorio su bordeaux"
+      ]
+    }
+  ],
+  "recommendation": "Usa la foto profilo avorio su bordeaux ovunque l'immagine sia piccola; la versione con le barre oro è per gli usi grandi (copertine, merchandising, stampa)."
+}
